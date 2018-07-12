@@ -29,14 +29,18 @@ namespace NeiRoP
             Matrix<double> mat1 = getFromPhoto("test1.png"),
                            mat2 = getFromPhoto("test2.png"),
                            mat3 = getFromPhoto("test3.png"),
+                           mat4 = getFromPhoto("test4.png"),
+                           mat5 = getFromPhoto("test5.png"),
 
                            notCorrect = getFromPhoto("example.png");
 
             var _mat1 = mat1.Transpose() * mat1;
             var _mat2 = mat2.Transpose() * mat2;
             var _mat3 = mat3.Transpose() * mat3;
-            var sum = _mat1 + _mat2 + _mat3;
-            for (int i = 0; i < 3; i++)
+            var _mat4 = mat4.Transpose() * mat4;
+            var _mat5 = mat5.Transpose() * mat5;
+            var sum = _mat1 + _mat2 + _mat3 + _mat4 + _mat5;
+            for (int i = 0; i < 5; i++)
             {
                 sum[i, i] = 0;
             } // не меняеться w[sum] * y[notCorrect.Transpose()]
@@ -45,22 +49,41 @@ namespace NeiRoP
             //Console.WriteLine("Start: " + test1.ToString());
 
             var hock = notCorrect.Transpose();
-            for (int i = 0; i < 1000; i++)
+            Matrix<double> old;
+            for (int i = 0; i < sum.RowCount; i++)
             {
+                old = hock;
                 hock = sum * hock;
-                hock = getNormalized(hock);
+                hock = setNewHock(old, getNormalized(hock), i); //Асинхронный метод, по моим наблюдениям результат не изменил((9
             }
 
             Bitmap bit = new Bitmap(Bitmap.FromFile("example.png"));
             for (int i = 0, j = 0; i < bit.Width * bit.Height; i++, j = j < bit.Height ? j++ : 0)
             {
-                bit.SetPixel(j, i % bit.Height,hock[i,0] > 0 ? Color.Black : Color.White);
+                bit.SetPixel(j, i % bit.Height, hock[i, 0] > 0 ? Color.Black : Color.White);
             }
             bit.Save("kek.png");
             pictureBox1.Image = bit;
             //Console.WriteLine("End: " + hock.ToString());
 
-            Console.WriteLine($"test1: {getPercent(mat1, hock)}\ntest2: {getPercent(mat2, hock)}\ntest3: {getPercent(mat3, hock)}");
+            Console.WriteLine($"test1: {getPercent(mat1, hock)}\n" +
+                             $"test2: {getPercent(mat2, hock)}\n" +
+                             $"test3: {getPercent(mat3, hock)}\n" +
+                             $"test4: {getPercent(mat4, hock)}\n" +
+                             $"test5: {getPercent(mat5, hock)}");
+        }
+
+        static public Matrix<double> setNewHock(Matrix<double> old, Matrix<double> newer, int parce)
+        {
+            double[,] _newArray = new double[1, old.RowCount];
+            for(int i = 0; i < newer.RowCount; i++)
+            {
+                if (i < parce)
+                    _newArray[0, i] = newer[i, 0];
+                else
+                    _newArray[0, i] = old[i, 0];
+            }
+            return DenseMatrix.OfArray(_newArray).Transpose();
         }
 
         static public double getPercent(Matrix<double> original, Matrix<double> with)
