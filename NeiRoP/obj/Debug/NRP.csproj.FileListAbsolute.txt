@@ -10,3 +10,15 @@ C:\Users\user\Documents\Visual Studio 2017\Projects\NeiRoP\NeiRoP\obj\Debug\NeiR
 C:\Users\user\Documents\Visual Studio 2017\Projects\NeiRoP\NeiRoP\obj\Debug\NeiRoP.pdb
 C:\Users\user\Documents\Visual Studio 2017\Projects\NeiRoP\NeiRoP\obj\Debug\NeiRoP.Main.resources
 C:\Users\user\Documents\Visual Studio 2017\Projects\NeiRoP\NeiRoP\obj\Debug\NRP.csproj.GenerateResource.cache
+C:\Users\user\Documents\Visual Studio 2017\Projects\NRP\NeiRoP\bin\Debug\NeiRoP.exe.config
+C:\Users\user\Documents\Visual Studio 2017\Projects\NRP\NeiRoP\bin\Debug\NeiRoP.exe
+C:\Users\user\Documents\Visual Studio 2017\Projects\NRP\NeiRoP\bin\Debug\NeiRoP.pdb
+C:\Users\user\Documents\Visual Studio 2017\Projects\NRP\NeiRoP\bin\Debug\MathNet.Numerics.dll
+C:\Users\user\Documents\Visual Studio 2017\Projects\NRP\NeiRoP\bin\Debug\MathNet.Numerics.xml
+C:\Users\user\Documents\Visual Studio 2017\Projects\NRP\NeiRoP\obj\Debug\NRP.csprojAssemblyReference.cache
+C:\Users\user\Documents\Visual Studio 2017\Projects\NRP\NeiRoP\obj\Debug\NeiRoP.Main.resources
+C:\Users\user\Documents\Visual Studio 2017\Projects\NRP\NeiRoP\obj\Debug\NRP.csproj.GenerateResource.cache
+C:\Users\user\Documents\Visual Studio 2017\Projects\NRP\NeiRoP\obj\Debug\NRP.csproj.CoreCompileInputs.cache
+C:\Users\user\Documents\Visual Studio 2017\Projects\NRP\NeiRoP\obj\Debug\NRP.csproj.CopyComplete
+C:\Users\user\Documents\Visual Studio 2017\Projects\NRP\NeiRoP\obj\Debug\NeiRoP.exe
+C:\Users\user\Documents\Visual Studio 2017\Projects\NRP\NeiRoP\obj\Debug\NeiRoP.pdb
