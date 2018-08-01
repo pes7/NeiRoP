@@ -12,3 +12,17 @@ C:\Users\user\Documents\Visual Studio 2017\Projects\NeiRoP\ImageConvisor\obj\Deb
 C:\Users\user\Documents\Visual Studio 2017\Projects\NeiRoP\ImageConvisor\obj\Debug\ImageConvisor.pdb
 C:\Users\user\Documents\Visual Studio 2017\Projects\NeiRoP\ImageConvisor\bin\Debug\Cudafy.NET.dll
 C:\Users\user\Documents\Visual Studio 2017\Projects\NeiRoP\ImageConvisor\bin\Debug\Cudafy.NET.xml
+C:\Users\user\Documents\Visual Studio 2017\Projects\NRP\ImageConvisor\bin\Debug\ImageConvisor.exe.config
+C:\Users\user\Documents\Visual Studio 2017\Projects\NRP\ImageConvisor\bin\Debug\ImageConvisor.exe
+C:\Users\user\Documents\Visual Studio 2017\Projects\NRP\ImageConvisor\bin\Debug\ImageConvisor.pdb
+C:\Users\user\Documents\Visual Studio 2017\Projects\NRP\ImageConvisor\bin\Debug\Cudafy.NET.dll
+C:\Users\user\Documents\Visual Studio 2017\Projects\NRP\ImageConvisor\bin\Debug\MathNet.Numerics.dll
+C:\Users\user\Documents\Visual Studio 2017\Projects\NRP\ImageConvisor\bin\Debug\Cudafy.NET.xml
+C:\Users\user\Documents\Visual Studio 2017\Projects\NRP\ImageConvisor\bin\Debug\MathNet.Numerics.xml
+C:\Users\user\Documents\Visual Studio 2017\Projects\NRP\ImageConvisor\obj\Debug\ImageConvisor.csprojAssemblyReference.cache
+C:\Users\user\Documents\Visual Studio 2017\Projects\NRP\ImageConvisor\obj\Debug\ImageConvisor.Main.resources
+C:\Users\user\Documents\Visual Studio 2017\Projects\NRP\ImageConvisor\obj\Debug\ImageConvisor.csproj.GenerateResource.cache
+C:\Users\user\Documents\Visual Studio 2017\Projects\NRP\ImageConvisor\obj\Debug\ImageConvisor.csproj.CoreCompileInputs.cache
+C:\Users\user\Documents\Visual Studio 2017\Projects\NRP\ImageConvisor\obj\Debug\ImageConvisor.csproj.CopyComplete
+C:\Users\user\Documents\Visual Studio 2017\Projects\NRP\ImageConvisor\obj\Debug\ImageConvisor.exe
+C:\Users\user\Documents\Visual Studio 2017\Projects\NRP\ImageConvisor\obj\Debug\ImageConvisor.pdb

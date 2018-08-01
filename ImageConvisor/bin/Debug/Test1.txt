@@ -1,0 +1,260 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using Cudafy;
+
+namespace ImageConvisor
+{
+    public partial class Main : Form
+    {
+        public Main()
+        {
+            InitializeComponent();
+        }
+
+        //double[,] _a = { {22, 15, 1 },
+        //                 {42, 5, 38},
+        //                 {28, 9, 4} };
+        //double[,] _b = { { 0, 0, 1 },
+        //                 { 0, 0, 0},
+        //                 { 1, 0, 0} };
+        //var _g1 = DenseMatrix.OfArray(_a);
+        //var _g2 = DenseMatrix.OfArray(_b);
+        //var max = _g1 * _g2;
+        //Console.WriteLine(max.ToString());
+        short[,] red, green, blue;
+        static string _path = "ex1.exp";
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Inicialize();
+            if (th != null)
+                th.Abort();
+        }
+
+        public void Inicialize()
+        {
+            red = parceImage((RGB)Enum.Parse(typeof(RGB), comboBox1.Text), _path);
+            green = parceImage((RGB)Enum.Parse(typeof(RGB), comboBox2.Text), _path);
+            blue = parceImage((RGB)Enum.Parse(typeof(RGB), comboBox3.Text), _path);
+            var original = Bitmap.FromFile(_path);
+            pictureBox1.Image = original;
+            pictureBox2.Image = bitConvertSigmentary(RGB.Red, red);
+            pictureBox3.Image = bitConvertSigmentary(RGB.Green, green);
+            pictureBox4.Image = bitConvertSigmentary(RGB.Blue, blue);
+            pictureBox5.Image = bitConvertSigmentary(RGB.Red, red, green, blue);
+        }
+
+        public static short[,] _mask;
+
+        #region castrateMatrix Function
+        private static async Task<short[,]> castrateMatrix(short[,] _matrix)
+        {
+            short[,] _newArr = new short[_matrix.GetLength(0) - 2, _matrix.GetLength(1) - 2];
+
+            for (int i = 1, _ireal = 0; i < _matrix.GetLength(0) - 1; i++, _ireal++)
+            {
+                for (int j = 1, _jreal = 0; j < _matrix.GetLength(1) - 1; j++, _jreal++)
+                {
+                    _newArr[_ireal, _jreal] = getMaskedMatrix(getSubMatrix(_matrix, i - 1, i + 1, j - 1, j + 1), _mask);
+                }
+            }
+            return _newArr;
+        }
+
+        #region optimize try
+        //struct returnDoubleMatrix
+        //{
+        //    public double[,] Red;
+        //    public double[,] Geen;
+        //    public double[,] Blue;
+        //}
+        //private static returnDoubleMatrix castrateMatrix(double[,] _matrixR, double[,] _matrixG, double[,] _matrixB)
+        //{
+        //    double[,] _newArrR = new double[_matrixR.GetLength(0) - 2, _matrixR.GetLength(1) - 2],
+        //              _newArrG = new double[_matrixG.GetLength(0) - 2, _matrixG.GetLength(1) - 2],
+        //              _newArrB = new double[_matrixB.GetLength(0) - 2, _matrixB.GetLength(1) - 2];
+
+        //    int i_max = _matrixR.GetLength(0) - 1,
+        //        j_max = _matrixR.GetLength(1) - 1;
+
+        //    for (int i = 1, _ireal = 0; i < i_max; i++, _ireal++)
+        //    {
+        //        for (int j = 1, _jreal = 0; j < j_max; j++, _jreal++)
+        //        {
+        //            _newArrR[_ireal, _jreal] = getMaskedMatrix(getSubMatrix(_matrixR, i - 1, i + 1, j - 1, j + 1), _mask);
+        //            _newArrG[_ireal, _jreal] = getMaskedMatrix(getSubMatrix(_matrixG, i - 1, i + 1, j - 1, j + 1), _mask);
+        //            _newArrB[_ireal, _jreal] = getMaskedMatrix(getSubMatrix(_matrixB, i - 1, i + 1, j - 1, j + 1), _mask);
+        //        }
+        //    }
+        //    return new returnDoubleMatrix() { Red = _newArrR, Geen = _newArrG, Blue = _newArrB };
+        //}
+        #endregion
+        #endregion
+
+
+        private static short getMaskedMatrix(short[,] _a, short[,] _mask)
+        {
+            short value = 0;
+            if (_a.GetLength(0) == _mask.GetLength(0) && _a.GetLength(1) == _mask.GetLength(1))
+            {
+                for (int i = 0; i < _a.GetLength(0); i++)
+                {
+                    for(int j = 0; j < _a.GetLength(1); j++)
+                    {
+                        value += (short)((int)_a[i,j] * (int)_mask[i, j]);
+                    }
+                }
+            }
+            else throw new Exception("_a and _mask need to be similar dimensions");
+            return value;
+        }
+
+        private static short[,] getSubMatrix(short[,] _a, int i_start, int i_end, int j_start, int j_end)
+        {
+            short[,] _nex = new short[i_end - i_start + 1, j_end - j_start + 1];
+            for(int i = i_start, i_sub = 0; i <= i_end; i++, i_sub++)
+            {
+                for(int j = j_start, j_sub = 0; j <= j_end; j++, j_sub++)
+                {
+                    _nex[i_sub, j_sub] = _a[i, j];
+                }
+            }
+            return _nex;
+        }
+
+        public enum RGB {Red,Green,Blue};
+        private static short[,] parceImage(RGB rGB, string path)
+        {
+            var image = (Bitmap)Bitmap.FromFile(path);
+            short[,] _array = new short[image.Height, image.Width];
+            for(int i=0; i < image.Height; i++)
+            {
+                for(int j=0;j < image.Width; j++)
+                {
+                    _array[i, j] = (short)getSubPixel(rGB, image, i, j);
+                }
+            }
+            return _array;
+        }
+
+        private static int getSubPixel(RGB rGB, Bitmap bit,int i ,int j)
+        {
+            switch (rGB)
+            {
+                case RGB.Red:
+                    return bit.GetPixel(j, i).R;
+                case RGB.Green:
+                    return bit.GetPixel(j, i).G;
+                case RGB.Blue:
+                    return bit.GetPixel(j, i).B;
+            }
+            return 0;
+        }
+
+        private static Bitmap bitConvertSigmentary(RGB rGB,short[,] _arrayR, short[,] _arrayG = null, short[,] _arrayB = null)
+        {
+            Bitmap bit = new Bitmap(_arrayR.GetLength(1), _arrayR.GetLength(0));
+            for (int i = 0; i < _arrayR.GetLength(0); i++)
+            {
+                for (int j = 0; j < _arrayR.GetLength(1); j++)
+                {
+                    if (_arrayG != null && _arrayB != null)
+                        bit.SetPixel(j, i, Color.FromArgb((int)_arrayR[i, j] > 255 ? 255 : (int)_arrayR[i, j] < 0 ? 0 : (int)_arrayR[i, j],
+                                                          (int)_arrayG[i, j] > 255 ? 255 : (int)_arrayG[i, j] < 0 ? 0 : (int)_arrayG[i, j],
+                                                          (int)_arrayB[i, j] > 255 ? 255 : (int)_arrayB[i, j] < 0 ? 0 : (int)_arrayB[i, j]));
+                    else
+                        bit.SetPixel(j, i, getColorFromSigment(rGB, (int)_arrayR[i, j]));
+                }
+            }
+            return bit;
+        }
+
+        private static Color getColorFromSigment(RGB rGB,int _sigm)
+        {
+            return rGB == RGB.Red ? Color.FromArgb(_sigm > 255 ? 255 : _sigm < 0 ? 0 : _sigm,0,0) : rGB == RGB.Green ? Color.FromArgb(0, _sigm > 255 ? 255 : _sigm < 0 ? 0 : _sigm, 0) : Color.FromArgb(0, 0, _sigm > 255 ? 255 : _sigm < 0 ? 0 : _sigm);
+        }
+
+        private static short[,] _r, _g, _b;
+        private void Genereate()
+        {
+            _mask = new short[,] { { short.Parse(textBox1.Text), short.Parse(textBox2.Text), short.Parse(textBox3.Text) },
+                                    { short.Parse(textBox4.Text), short.Parse(textBox5.Text), short.Parse(textBox6.Text) },
+                                    { short.Parse(textBox7.Text), short.Parse(textBox8.Text), short.Parse(textBox9.Text) } };
+            int progon = trackBar1.Value;
+            _r = red;
+            _g = green;
+            _b = blue;
+
+            Thread th1, th2, th3;
+            for (int i = 0; i < progon; i++)
+            {
+                //7.6
+                //var run = castrateMatrix(_r, _g, _b).Result;
+                //_r = run.Red;
+                //_g = run.Geen;
+                //_b = run.Blue;
+                //7.6
+                //7.0
+                th1 = new Thread(async () => {
+                    _r = await castrateMatrix(_r);
+                });
+                th2 = new Thread(async () => {
+                    _g = await castrateMatrix(_g);
+                });
+                th3 = new Thread(async () => {
+                    _b = await castrateMatrix(_b);
+                });
+                th1.Start();
+                th2.Start();
+                th3.Start();
+                do
+                {
+                    Console.WriteLine($"R:{_r.GetLength(0)}x{_r.GetLength(1)} G:{_g.GetLength(0)}x{_g.GetLength(1)} B:{_b.GetLength(0)}x{_b.GetLength(1)}");
+                } while ((th1.ThreadState==ThreadState.Running || th2.ThreadState == ThreadState.Running) || (th1.ThreadState == ThreadState.Running || th3.ThreadState == ThreadState.Running));
+                Thread.Sleep(200);
+                th1.Abort();
+                th2.Abort();
+                th3.Abort();
+            }
+            pictureBox5.Image = bitConvertSigmentary(RGB.Red, _r, _g, _b);
+            pictureBox5.Image.Save("exp.png");
+        }
+
+        static Thread th;
+        private void button3_Click(object sender, EventArgs e)
+        {
+            DialogResult dr = DialogResult.None;
+            th = new Thread(() =>
+            {
+                openFileDialog1.Filter = "jpg and png files (*.exp)|*.exp";
+                dr = openFileDialog1.ShowDialog();
+                while (dr == DialogResult.OK)
+                {
+                    if (openFileDialog1.FileName != null)
+                    {
+                        _path = openFileDialog1.FileName;
+                    }
+                }
+            });
+            th.SetApartmentState(ApartmentState.STA);
+            th.Start();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Genereate();
+        }
+
+        private void trackBar1_Scroll(object sender, EventArgs e)
+        {
+            label1.Text = $"{trackBar1.Value} pts.";
+        }
+    }
+}
